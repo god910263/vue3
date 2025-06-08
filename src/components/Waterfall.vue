@@ -137,7 +137,6 @@ const toggleLike = (item) => {
   }
 }
 </script>
-
 <style scoped>
 .download-button{
   display: flex;
