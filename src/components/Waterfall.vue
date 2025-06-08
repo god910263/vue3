@@ -6,16 +6,28 @@
           <img v-lazy="item.image" :src="item.image" alt="图片" />
         </div>
         <div v-else class="video-wrapper">
-          <video :src="item.video" controls v-video-lazy v-video-autoplay autoplay muted loop class="video-player"></video>
+          <video :src="item.video" controls v-video-lazy v-video-autoplay autoplay muted loop
+            class="video-player"></video>
         </div>
-        <div class="text">{{ item.title }}</div>
+        <div class="download-button">
+          <div class="text">{{ item.title }}</div>
+          <!-- 使用 SVG 图标 -->
+          <div class="like-button" @click="toggleLike(item)">
+            <svg :class="['like-icon', item.liked ? 'liked' : '']" viewBox="0 0 24 24" width="20" height="20">
+              <path v-if="!item.liked"
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              <path v-if="item.liked"
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+            {{ item.likes }}
+          </div>
+        </div>
       </div>
     </div>
 
     <div v-if="loading" class="loading">加载中...</div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted } from 'vue'
 import Masonry from 'masonry-layout'
@@ -66,7 +78,7 @@ const loadMore = async () => {
   setTimeout(initMasonry, 100)
 }
 onMounted(() => {
-    loadMore()
+  loadMore()
 })
 
 // 上拉加载更多  节流防止重复点击
@@ -115,21 +127,38 @@ const refreshData = () => {
   hasMore.value = true
   loadMore()
 }
+// 点赞功能
+const toggleLike = (item) => {
+  item.liked = !item.liked
+  if (item.liked) {
+    item.likes++
+  } else {
+    item.likes--
+  }
+}
 </script>
 
 <style scoped>
+.download-button{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
 .waterfall-container {
   display: block;
 }
 
 .waterfall-item {
-  width: calc(50% - 8px); /* 移动端也保持两列 */
+  width: calc(50% - 8px);
+  /* 移动端也保持两列 */
   margin-right: 8px;
   margin-bottom: 8px;
 }
+
 .waterfall-item:nth-child(even) {
   margin-right: 0;
 }
+
 .waterfall-item .content {
   background-color: #fff;
   border-radius: 8px;
@@ -149,6 +178,36 @@ const refreshData = () => {
   width: 100%;
   height: auto;
   display: block;
+}
+.like-button {
+  display: flex;
+  align-items: flex-end;
+}
+/* like-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: #999;
+  font-size: 14px;
+}
+
+.iconfont {
+  font-family: "iconfont";
+}
+
+.icon-like-fill {
+  color: red;
+} */
+.like-icon {
+  fill: #999;
+  transition: fill 0.3s;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.like-icon.liked {
+  fill: red;
 }
 
 .text {

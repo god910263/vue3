@@ -37,7 +37,9 @@ const fetchData = (page, pageSize) => {
           title: isImage ? `图片内容 ${id}` : `视频内容 ${id}`,
           image: `https://picsum.photos/300/${200 + Math.floor(Math.random() * 100)}`,
           video: 'https://www.w3schools.com/html/mov_bbb.mp4',
-          height: 200 + Math.floor(Math.random() * 300)
+          height: 200 + Math.floor(Math.random() * 300),
+          likes: Math.floor(Math.random() * 100), // 随机点赞数：0~99
+          liked: false // 初始未点赞
         }
       })
       resolve(data)
